@@ -16,7 +16,12 @@ import { NotFound } from './components/views/NotFound/NotFound';
 
 const theme = createMuiTheme({
   palette: {
-    primary: { main: '#2B4C6F' },
+    primary: {
+      main: '#e3af37',
+    },
+    secondary: {
+      main: '#376ae3',
+    },
   },
 });
 
@@ -28,11 +33,11 @@ const App = () => (
           <CssBaseline />
           <MainLayout>
             <Switch>
-              <Route exact path='/' component={Homepage} />
-              <Route exact path='/post/add' component={PostAdd} />
-              <Route exact path='/post/:id' component={Post} />
-              <Route exact path='/post/:id/edit' component={PostEdit} />
-              <Route path='*' component={NotFound} />
+              <Route exact path="/" component={Homepage} />
+              <Route exact path="/post/add" component={PostAdd} />
+              <Route exact path="/post/:id" component={Post} />
+              <Route exact path="/post/:id/edit" component={PostEdit} />
+              <Route path="*" component={NotFound} />
             </Switch>
           </MainLayout>
         </ThemeProvider>
