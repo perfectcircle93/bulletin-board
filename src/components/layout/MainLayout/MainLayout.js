@@ -1,19 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import clsx from 'clsx';
-
 // import { connect } from 'react-redux';
 // import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
+import { Header } from '../Header/Header';
+import { makeStyles } from '@material-ui/core/styles';
+//import styles from './MainLayout.module.scss';
 
-import styles from './MainLayout.module.scss';
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: '100%',
+  },
+  content: {
+    height: '100%',
+    padding: theme.spacing(4),
+  },
+}));
 
-const Component = ({className, children}) => (
-  <div className={clsx(className, styles.root)}>
-    <h2>MainLayout</h2>
-    {children}
-  </div>
-);
+const Component = ({ className, children }) => {
+  const classes = useStyles();
+  return (
+    <div className={clsx(className, classes.root)}>
+      <Header></Header>
+      {children}
+    </div>
+  );
+};
 
 Component.propTypes = {
   children: PropTypes.node,
