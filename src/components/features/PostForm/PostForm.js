@@ -17,18 +17,18 @@ const PostForm = ({ addPost, type,  postId }) => {
   const [ phone, setPhone] = useState('');
   const [ location, setLocation ] = useState('');
 
-  useEffect((editPost) => {
+  /*useEffect((editPost) => {
     if(type === 'edit') {
       console.log(postId);
       // trzeba pobrac całą zawartosc postu o postId i jego wartośći przypisać do naszych stałych ze stanu, author, title itd.
     }
-  }, []);
+  }, []);*/
 
   const handleSubmit = e => {
     e.preventDefault();
 
     const post = {
-      id: uuidv4,
+      _id: uuidv4,
       author,
       title,
       description,

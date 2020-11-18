@@ -15,6 +15,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles({
   root: {
@@ -33,6 +34,7 @@ const useStyles = makeStyles({
 });
 
 const Component = ({
+  _id,
   title,
   photo,
   description,
@@ -80,7 +82,12 @@ const Component = ({
               </Box>
             </CardContent>
             <CardActions>
-              <Button size="small" color="primary">
+              <Button
+                size="small"
+                color="primary"
+                component={Link}
+                to={`/post/${_id}/edit`}
+              >
                 Edit
               </Button>
               <Button size="small" color="primary">
@@ -104,6 +111,7 @@ Component.propTypes = {
   location: PropTypes.string,
   email: PropTypes.string,
   phone: PropTypes.string,
+  _id: PropTypes.string,
 };
 
 const mapStateToProps = (state, props) => {

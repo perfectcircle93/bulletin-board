@@ -14,9 +14,8 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Container from '@material-ui/core/Container';
 import Hidden from '@material-ui/core/Hidden';
 import Button from '@material-ui/core/Button';
-// import { connect } from 'react-redux';
-// import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
-//import styles from './Header.module.scss';
+import { connect } from 'react-redux';
+import { isLogged, logToggle } from '../../../redux/userRedux.js';
 import Logo from '../../../pictures/logo.png';
 import { PageNav } from '../PageNav/PageNav';
 
@@ -43,13 +42,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = ({ className, children }) => {
+const Component = ({ className, logged, logToggle }) => {
   const classes = useStyles();
   //if auth==true you need to login
-  const [auth, setAuth] = React.useState(true);
+  const [auth, setAuth] = React.useState(!logged);
 
   const handleChange = (event) => {
     setAuth(event.target.checked);
+    logToggle();
   };
 
   return (
@@ -65,7 +65,7 @@ const Header = ({ className, children }) => {
                 aria-label="login switch"
               />
             }
-            label={auth ? 'Logout' : 'Login'}
+            label={auth ? 'Logged out' : 'Logged in'}
           />
         </FormGroup>
       </Container>
@@ -108,9 +108,28 @@ const Header = ({ className, children }) => {
   );
 };
 
-Header.propTypes = {
+Component.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
+  logged: PropTypes.bool,
+  logToggle: PropTypes.func,
 };
 
-export default Header;
+const mapStateToProps = (state) => ({
+  logged: isLogged(state),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  logToggle: () => dispatch(logToggle()),
+});
+
+const ComponentContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Component);
+
+export {
+  //Component as Header,
+  ComponentContainer as Header,
+  Component as HeaderComponent,
+};
