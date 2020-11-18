@@ -7,8 +7,39 @@ import { addPost } from './../../../redux/postsRedux';
 import { editPost } from './../../../redux/postsRedux';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
+import { Link } from 'react-router-dom';
+import { isLogged } from '../../../redux/userRedux.js';
+import { NotFound } from '../../views/NotFound/NotFound';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
-const PostForm = ({ addPost, type,  postId }) => {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    '& > *': {
+      margin: theme.spacing(5),
+      width: '50%',
+      padding: theme.spacing(2),
+    },
+  },
+  form: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    width: '70%',
+    margin: 'auto',
+    '& > *': {
+      margin: theme.spacing(2),
+    },
+  },
+}));
+
+const PostForm = ({ addPost, type,  postId, logged, className }) => {
+  const classes = useStyles();
   const [ author, setAuthor ] = useState('');
   const [ title, setTitle ] = useState('');
   const [ description, setDescription ] = useState('');
@@ -44,31 +75,48 @@ const PostForm = ({ addPost, type,  postId }) => {
     else addPost(post);
   };
 
+  
   return (
-    <form noValidate onSubmit={handleSubmit} autoComplete="off">
-      <div>
-        <TextField label="Author" value={author} onChange={event => setAuthor(event.target.value)} />
-      </div>
-      <div>
-        <TextField label="Title" value={title} onChange={event => setTitle(event.target.value)}/>
-      </div>
-      <div>
-        <TextField label="Description" value={description} onChange={event => setDescription(event.target.value)}/>
-      </div>
-      <div>
-        <TextField label="Photo" value={photo} onChange={event => setPhoto(event.target.value)}/>
-      </div>
-      <div>
-        <TextField label="Email" value={email} onChange={event => setEmail(event.target.value)}/>
-      </div>
-      <div>
-        <TextField label="Phone" value={phone} onChange={event => setPhone(event.target.value)}/>
-      </div>
-      <div>
-        <TextField label="Location" value={location} onChange={event => setLocation(event.target.value)}/>
-      </div>
-      <Button type="submit">Add post</Button>
-    </form>
+    <div className={clsx(className, classes.root)}>
+      {logged ? (
+        <Paper elevation={3}>
+          <Typography variant="h5" color="textSecondary" component="h2">
+            Add new post
+          </Typography>
+          <form noValidate onSubmit={handleSubmit} autoComplete="off">
+            <div className={classes.form}>
+            
+              <TextField label="Author" value={author} onChange={event => setAuthor(event.target.value)} />
+            
+              <TextField label="Title" value={title} onChange={event => setTitle(event.target.value)}/>
+            
+              <TextField label="Description" value={description} onChange={event => setDescription(event.target.value)} multiline
+                rows="10"/>
+            
+              <TextField label="Photo" value={photo} onChange={event => setPhoto(event.target.value)}/>
+            
+              <TextField label="Email" value={email} onChange={event => setEmail(event.target.value)}/>
+            
+              <TextField label="Phone" value={phone} onChange={event => setPhone(event.target.value)}/>
+            
+              <TextField label="Location" value={location} onChange={event => setLocation(event.target.value)}/>
+            
+              <Button
+                size="medium"
+                color="primary"
+                variant="contained"
+                component={Link}
+                to={`/`}
+              >
+                Add post
+              </Button>
+            </div>
+          </form>
+        </Paper>
+      ) : (
+        <NotFound></NotFound>
+      )}
+    </div>
   );
 };
 
@@ -80,6 +128,13 @@ PostForm.propTypes = {
   addPost: PropTypes.node,
   type: PropTypes.node,
   postId: PropTypes.node,
+  logged: PropTypes.bool,
+  className: PropTypes.string,
 };
 
-export default connect(null, mapDispatchToProps)(PostForm);
+const mapStateToProps = (state) => ({
+  logged: isLogged(state),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostForm);
+

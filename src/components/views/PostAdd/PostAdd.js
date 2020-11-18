@@ -7,7 +7,6 @@ import styles from './PostAdd.module.scss';
 
 const PostAdd = ({className, children}) => (
   <div className={clsx(className, styles.root)}>
-    <h2>PostAdd</h2>
     <PostForm />
   </div>
 );
