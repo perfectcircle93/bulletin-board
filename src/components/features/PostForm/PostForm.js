@@ -102,6 +102,7 @@ const PostForm = ({ addPost, type,  postId, logged, className }) => {
               <TextField label="Location" value={location} onChange={event => setLocation(event.target.value)}/>
             
               <Button
+                type="submit"
                 size="medium"
                 color="primary"
                 variant="contained"

@@ -15,7 +15,7 @@ const FETCH_START = createActionName('FETCH_START');
 const FETCH_SUCCESS = createActionName('FETCH_SUCCESS');
 const FETCH_ERROR = createActionName('FETCH_ERROR');
 const ADD_POST = createActionName('ADD_POST');
-const EDIT_POST = createActionName('ADD_POST');
+const EDIT_POST = createActionName('EDIT_POST');
 
 /* action creators */
 export const fetchStarted = (payload) => ({ payload, type: FETCH_START });
