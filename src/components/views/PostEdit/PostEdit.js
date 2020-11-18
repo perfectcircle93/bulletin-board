@@ -15,6 +15,7 @@ const PostEdit = ({className, children, match}) => (
 PostEdit.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
+  match: PropTypes.string,
 };
 
 export default PostEdit;

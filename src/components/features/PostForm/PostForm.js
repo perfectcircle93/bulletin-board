@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { addPost } from './../../../redux/postsRedux';
 import { editPost } from './../../../redux/postsRedux';
 import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
 
 const PostForm = ({ addPost, type,  postId }) => {
   const [ author, setAuthor ] = useState('');
@@ -27,6 +28,7 @@ const PostForm = ({ addPost, type,  postId }) => {
     e.preventDefault();
 
     const post = {
+      id: uuidv4,
       author,
       title,
       description,
