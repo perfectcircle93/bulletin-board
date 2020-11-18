@@ -17,7 +17,7 @@ import Button from '@material-ui/core/Button';
 // import { connect } from 'react-redux';
 // import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
 //import styles from './Header.module.scss';
-import { ReactComponent as Logo } from '../../../pictures//logo.png';
+import Logo from '../../../pictures/logo.png';
 import { PageNav } from '../PageNav/PageNav';
 
 const useStyles = makeStyles((theme) => ({
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Component = ({ className, children }) => {
+const Header = ({ className, children }) => {
   const classes = useStyles();
   //if auth==true you need to login
   const [auth, setAuth] = React.useState(true);
@@ -73,7 +73,7 @@ const Component = ({ className, children }) => {
         <Container>
           <Toolbar>
             <Link to={`${process.env.PUBLIC_URL}/`}>
-              <Logo />
+              <img src={Logo} alt="Logo" />
             </Link>
             <div className={classes.flexGrow} />
 
@@ -108,23 +108,9 @@ const Component = ({ className, children }) => {
   );
 };
 
-Component.propTypes = {
+Header.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
 };
 
-// const mapStateToProps = state => ({
-//   someProp: reduxSelector(state),
-// });
-
-// const mapDispatchToProps = dispatch => ({
-//   someAction: arg => dispatch(reduxActionCreator(arg)),
-// });
-
-// const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
-
-export {
-  Component as Header,
-  // Container as Header,
-  Component as HeaderComponent,
-};
+export default Header;

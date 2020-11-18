@@ -1,37 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import clsx from 'clsx';
-
-// import { connect } from 'react-redux';
-// import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
+import PostForm from './../../features/PostForm/PostForm';
 
 import styles from './PostEdit.module.scss';
 
-const Component = ({className, children}) => (
+const PostEdit = ({className, children, match}) => (
   <div className={clsx(className, styles.root)}>
-    <h2>PostEdit</h2>
-    {children}
+    <h2>PostAdd</h2>
+    <PostForm type="edit" postId={match.params.id} />
   </div>
 );
 
-Component.propTypes = {
+PostEdit.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
 };
 
-// const mapStateToProps = state => ({
-//   someProp: reduxSelector(state),
-// });
-
-// const mapDispatchToProps = dispatch => ({
-//   someAction: arg => dispatch(reduxActionCreator(arg)),
-// });
-
-// const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
-
-export {
-  Component as PostEdit,
-  // Container as PostEdit,
-  Component as PostEditComponent,
-};
+export default PostEdit;
