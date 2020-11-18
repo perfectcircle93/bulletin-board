@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 //import clsx from 'clsx';
-
-// import { connect } from 'react-redux';
-// import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
-
+import { connect } from 'react-redux';
+import { isLogged } from '../../../redux/userRedux.js';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -29,7 +27,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Component = ({ title, photo, description, _id }) => {
+const Component = ({ title, photo, description, _id, logged }) => {
   const classes = useStyles();
 
   return (
@@ -46,17 +44,21 @@ const Component = ({ title, photo, description, _id }) => {
         </CardContent>
       </CardActionArea>
       <CardActions mb={0}>
-        <Button
-          size="small"
-          color="primary"
-          component={Link}
-          to={`/post/${_id}/edit`}
-        >
-          Edit
-        </Button>
-        <Button size="small" color="primary">
-          Delete
-        </Button>
+        {logged && (
+          <div>
+            <Button
+              size="small"
+              color="primary"
+              component={Link}
+              to={`/post/${_id}/edit`}
+            >
+              Edit
+            </Button>
+            <Button size="small" color="primary">
+              Delete
+            </Button>
+          </div>
+        )}
       </CardActions>
     </Card>
   );
@@ -68,20 +70,21 @@ Component.propTypes = {
   photo: PropTypes.string,
   description: PropTypes.string,
   _id: PropTypes.string,
+  logged: PropTypes.bool,
 };
 
-// const mapStateToProps = state => ({
-//   someProp: reduxSelector(state),
-// });
+const mapStateToProps = (state) => ({
+  logged: isLogged(state),
+});
 
 // const mapDispatchToProps = dispatch => ({
 //   someAction: arg => dispatch(reduxActionCreator(arg)),
 // });
 
-// const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
+const ComponentContainer = connect(mapStateToProps)(Component);
 
 export {
   Component as ItemBox,
   // Container as ItemBox,
-  Component as ItemBoxComponent,
+  ComponentContainer as ItemBoxComponent,
 };

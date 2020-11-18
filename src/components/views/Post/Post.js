@@ -16,6 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { Link } from 'react-router-dom';
+import { isLogged } from '../../../redux/userRedux.js';
 
 const useStyles = makeStyles({
   root: {
@@ -43,6 +44,7 @@ const Component = ({
   location,
   email,
   phone,
+  logged,
 }) => {
   const classes = useStyles();
 
@@ -82,17 +84,21 @@ const Component = ({
               </Box>
             </CardContent>
             <CardActions>
-              <Button
-                size="small"
-                color="primary"
-                component={Link}
-                to={`/post/${_id}/edit`}
-              >
-                Edit
-              </Button>
-              <Button size="small" color="primary">
-                Delete
-              </Button>
+              {logged && (
+                <div>
+                  <Button
+                    size="small"
+                    color="primary"
+                    component={Link}
+                    to={`/post/${_id}/edit`}
+                  >
+                    Edit
+                  </Button>
+                  <Button size="small" color="primary">
+                    Delete
+                  </Button>
+                </div>
+              )}
             </CardActions>
           </Box>
         </Card>
@@ -112,12 +118,14 @@ Component.propTypes = {
   email: PropTypes.string,
   phone: PropTypes.string,
   _id: PropTypes.string,
+  logged: PropTypes.bool,
 };
 
 const mapStateToProps = (state, props) => {
   const post = getById(state, props.match.params.id);
   return {
     ...post,
+    logged: isLogged(state),
   };
 };
 
