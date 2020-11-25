@@ -39,10 +39,35 @@ export const fetchPublished = () => {
         });
       }
     } catch (err) {
-      dispatch(fetchError(err.message || true));
+      dispatch(fetchError(err.message));
     }
   };
 };
+
+export const addPostRequest = post => {
+  return async (dispatch) => {
+    try {
+      dispatch(fetchStarted());
+      const res = await axios.post('http://localhost:8000/api/posts', post);
+      dispatch(addPost(res.data));
+    } catch (err) {
+      dispatch(fetchError(err.message));
+    }
+  };
+};
+
+export const editPostRequest = post => {
+  return async (dispatch) => {
+    try {
+      dispatch(fetchStarted());
+      const res = await axios.post('http://localhost:8000/api/posts/' + post.id, post);
+      dispatch(editPost(res.data));
+    } catch (err) {
+      dispatch(fetchError(err.message));
+    }
+  };
+};
+
 
 /* reducer */
 export const reducer = (statePart = [], action = {}) => {
@@ -79,6 +104,20 @@ export const reducer = (statePart = [], action = {}) => {
       return {
         ...statePart,
         data: [...statePart.data, action.payload],
+        loading: {
+          active: false,
+          error: false,
+        },
+      };
+    }
+    case EDIT_POST: {
+      return {
+        ...statePart,
+        data: statePart.data.map(post => post._id === action.payload._id ? { ...action.payload } : post),
+        loading: {
+          active: false,
+          error: false,
+        },
       };
     }
     default:

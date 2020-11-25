@@ -29,15 +29,32 @@ router.get('/posts/:id', async (req, res) => {
   }
 });
 
-router.post('/posts/add', async (req, res) => {
+router.post('/posts', async (req, res) => {
   try {
     const newPost = new Post({ ...req.body });
     await newPost.save();
     res.json(newPost);
   } catch (err) {
-    res.status(500).json({ messaage: err });
+    res.status(500).json({ message: err });
   }
 });
+
+router.put('/posts/:id', async (req, res) => {
+  try {
+    const post = await Post.find({ _id: req.params.id });
+    if(!post) res.status(404).json({ message: 'Not found '});
+    else {
+      for(const paramId in req.body) {
+        post[paramId] = req.body[paramId];
+      }
+      await post.save();
+      res.json(post);
+    }
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+
 
 
 module.exports = router;

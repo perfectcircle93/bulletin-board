@@ -1,20 +1,21 @@
 /* eslint-disable linebreak-style */
-import React, { useState/*, useEffect*/ } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { addPost } from './../../../redux/postsRedux';
+import { addPost, getById } from './../../../redux/postsRedux';
 import { editPost } from './../../../redux/postsRedux';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
-//import { Link } from 'react-router-dom';
 import { isLogged } from '../../../redux/userRedux.js';
 import { NotFound } from '../../views/NotFound/NotFound';
 import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { addPostRequest } from '../../../redux/postsRedux.js';
+import { addPostRequest, editPostRequest } from '../../../redux/postsRedux.js';
+import { Container } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 
 const styles = (theme) => ({
   root: {
@@ -39,42 +40,10 @@ const styles = (theme) => ({
   },
 });
 
-const PostForm = ({ addPost, type,  postId, logged, className }) => {
-  state = {
-    post: {
-      title: '',
-      location: '',
-      description: '',
-    },
-    error: null,
-  };
-  updateInputValue = ({ target }) => {
-    const { post } = this.state;
-    const { value, name } = target;
-
-    this.setState({ post: { ...post, [name]: value } });
-  };
-
-  submitPost = async (e) => {
-    const { post } = this.state;
-    const { addPost } = this.props;
-
-    e.preventDefault();
-
-    if (post.title && post.description && post.location) {
-      await addPost(post);
-      this.setState({
-        post: {
-          title: '',
-          location: '',
-          description: '',
-        },
-        error: null,
-      });
-    } else this.setState({ isError: true });
-  };
-  
+const PostForm = ({ addPost, type, post, logged, className }) => {
+    
   const classes = withStyles();
+  const history = useHistory();
   const [ author, setAuthor ] = useState('');
   const [ title, setTitle ] = useState('');
   const [ description, setDescription ] = useState('');
@@ -82,37 +51,57 @@ const PostForm = ({ addPost, type,  postId, logged, className }) => {
   const [ email, setEmail ] = useState('');
   const [ phone, setPhone] = useState('');
   const [ location, setLocation ] = useState('');
+  const [ id, setId ] = useState('');
 
-  /*useEffect((editPost) => {
+  useEffect(() => {
     if(type === 'edit') {
-      console.log(postId);
-      // trzeba pobrac całą zawartosc postu o postId i jego wartośći przypisać do naszych stałych ze stanu, author, title itd.
+      setAuthor(post.author);
+      setTitle(post.title);
+      setDescription(post.description);
+      setPhoto(post.photo);
+      setEmail(post.email);
+      setLocation(post.location);
+      setPhoto(post.email);
+      setId(post._id);
     }
-  }, []);*/
+  }, []);
 
   const handleSubmit = e => {
     e.preventDefault();
 
-    const post = {
-      _id: uuidv4,
-      author,
-      title,
-      description,
-      photo,
-      email,
-      phone,
-      location,
-      date_publ: new Date(),
-      date_act: new Date(),
-      status: 'closed',
-    };
-    if(type === 'edit') editPost(postId, post);
-    else addPost(post);
+    if(type === 'edit') {
+      const post = {
+        _id: id,
+        author,
+        title,
+        description,
+        photo,
+        email,
+        phone,
+        location,
+        date_act: new Date(),
+      };
+      editPost(post);
+    } else {
+      const post = {
+        _id: uuidv4,
+        author,
+        title,
+        description,
+        photo,
+        email,
+        phone,
+        location,
+        date_publ: new Date(),
+        date_act: new Date(),
+        status: 'published',
+      };
+      addPost(post);
+    }
+  
+    history.push('/');
   };
 
-  render() {
-    const { updateInputValue } = this;
-    const { classes, logged, className } = this.props;
   return (
     <div className={clsx(className, classes.root)}>
       {logged ? (
@@ -143,7 +132,6 @@ const PostForm = ({ addPost, type,  postId, logged, className }) => {
                 size="medium"
                 color="primary"
                 variant="contained"
-                component={Link}
                 to={`/`}
               >
                 Add post
@@ -156,12 +144,8 @@ const PostForm = ({ addPost, type,  postId, logged, className }) => {
       )}
     </div>
   );
-};
-}
 
-const mapDispatchToProps = dispatch => ({
-  addPost: post => dispatch(addPost(post)),
-});
+}
 
 PostForm.propTypes = {
   addPost: PropTypes.node,
@@ -173,8 +157,14 @@ PostForm.propTypes = {
   classes: PropTypes.object,
 };
 
-const mapStateToProps = (state) => ({
+const mapDispatchToProps = dispatch => ({
+  addPost: post => dispatch(addPostRequest(post)),
+  editPost: post => dispatch(editPostRequest(post)),
+});
+
+const mapStateToProps = (state, props) => ({
   logged: isLogged(state),
+  post: getById(state, props.match.params.id),
 });
 
 export const PostAdd = withStyles(styles)(Container);
