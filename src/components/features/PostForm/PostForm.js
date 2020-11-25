@@ -7,15 +7,16 @@ import { addPost } from './../../../redux/postsRedux';
 import { editPost } from './../../../redux/postsRedux';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import { isLogged } from '../../../redux/userRedux.js';
 import { NotFound } from '../../views/NotFound/NotFound';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import { addPostRequest } from '../../../redux/postsRedux.js';
 
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -36,10 +37,44 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(2),
     },
   },
-}));
+});
 
 const PostForm = ({ addPost, type,  postId, logged, className }) => {
-  const classes = useStyles();
+  state = {
+    post: {
+      title: '',
+      location: '',
+      description: '',
+    },
+    error: null,
+  };
+  updateInputValue = ({ target }) => {
+    const { post } = this.state;
+    const { value, name } = target;
+
+    this.setState({ post: { ...post, [name]: value } });
+  };
+
+  submitPost = async (e) => {
+    const { post } = this.state;
+    const { addPost } = this.props;
+
+    e.preventDefault();
+
+    if (post.title && post.description && post.location) {
+      await addPost(post);
+      this.setState({
+        post: {
+          title: '',
+          location: '',
+          description: '',
+        },
+        error: null,
+      });
+    } else this.setState({ isError: true });
+  };
+  
+  const classes = withStyles();
   const [ author, setAuthor ] = useState('');
   const [ title, setTitle ] = useState('');
   const [ description, setDescription ] = useState('');
@@ -75,7 +110,9 @@ const PostForm = ({ addPost, type,  postId, logged, className }) => {
     else addPost(post);
   };
 
-  
+  render() {
+    const { updateInputValue } = this;
+    const { classes, logged, className } = this.props;
   return (
     <div className={clsx(className, classes.root)}>
       {logged ? (
@@ -120,6 +157,7 @@ const PostForm = ({ addPost, type,  postId, logged, className }) => {
     </div>
   );
 };
+}
 
 const mapDispatchToProps = dispatch => ({
   addPost: post => dispatch(addPost(post)),
@@ -131,11 +169,15 @@ PostForm.propTypes = {
   postId: PropTypes.node,
   logged: PropTypes.bool,
   className: PropTypes.string,
+  addPost: PropTypes.func,
+  classes: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
   logged: isLogged(state),
 });
+
+export const PostAdd = withStyles(styles)(Container);
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostForm);
 

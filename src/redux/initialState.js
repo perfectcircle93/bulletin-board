@@ -1,7 +1,7 @@
 export const initialState = {
   posts: {
     data: [
-      {
+      /*{
         _id: '5e887e262647b0e3ccf679ba',
         author: 'Jimenez Mercer',
         title: 'Sint enim proident sint.',
@@ -163,7 +163,7 @@ export const initialState = {
         email: 'wisemclaughlin@vertide.com',
         phone: '+48 948491395',
         location: 'Elizaville',
-      },
+      },*/
     ],
     loading: {
       active: false,

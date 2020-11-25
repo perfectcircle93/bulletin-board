@@ -1,4 +1,5 @@
-/* eslint-disable linebreak-style */
+import axios from 'axios';
+
 /* selectors */
 export const getAll = ({ posts }) => posts.data;
 export const getById = ({ posts }, id) => {
@@ -26,6 +27,22 @@ export const addPost = (payload) => ({ payload, type: ADD_POST });
 export const editPost = (payload) => ({ payload, type: EDIT_POST });
 
 /* thunk creators */
+
+export const fetchPublished = () => {
+  return (dispatch, getState) => {
+    try {
+      const { posts } = getState();
+      if (!posts.data.length || posts.loading.active === false) {
+        dispatch(fetchStarted());
+        axios.get('http://localhost:8000/api/posts').then((res) => {
+          dispatch(fetchSuccess(res.data));
+        });
+      }
+    } catch (err) {
+      dispatch(fetchError(err.message || true));
+    }
+  };
+};
 
 /* reducer */
 export const reducer = (statePart = [], action = {}) => {
