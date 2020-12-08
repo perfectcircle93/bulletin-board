@@ -60,7 +60,7 @@ export const editPostRequest = post => {
   return async (dispatch) => {
     try {
       dispatch(fetchStarted());
-      const res = await axios.post('http://localhost:8000/api/posts/' + post.id, post);
+      const res = await axios.put('http://localhost:8000/api/posts/' + post._id, post);
       dispatch(editPost(res.data));
     } catch (err) {
       dispatch(fetchError(err.message));

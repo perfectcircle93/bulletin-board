@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 //import clsx from 'clsx';
 import { connect } from 'react-redux';
-import { getAll, fetchPublished } from '../../../redux/postsRedux.js';
+import { getAll } from '../../../redux/postsRedux.js';
 //import styles from './Homepage.module.scss';
 //import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -13,10 +13,6 @@ import { ItemBox } from '../../features/ItemBox/ItemBox';
 
 
 class Component extends React.Component {
-  componentDidMount() {
-    const { fetchPublishedPosts } = this.props;
-    fetchPublishedPosts();
-  }
   render() {
     const { className, items } = this.props;
 
@@ -48,14 +44,8 @@ const mapStateToProps = (state) => ({
   items: getAll(state),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchPublishedPosts: () => dispatch(fetchPublished()),
-});
-
-
 const ComponentContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
 )(Component);
 
 export {

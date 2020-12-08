@@ -40,7 +40,7 @@ const styles = (theme) => ({
   },
 });
 
-const PostForm = ({ addPost, type, post, logged, className }) => {
+const PostForm = ({ addPost, type, post, logged, className, editPost }) => {
     
   const classes = withStyles();
   const history = useHistory();
@@ -54,7 +54,8 @@ const PostForm = ({ addPost, type, post, logged, className }) => {
   const [ id, setId ] = useState('');
 
   useEffect(() => {
-    if(type === 'edit') {
+    console.log('WLACZAMY USE EFFECT', type, post);
+    if(type === 'edit' && post && !post.error) {
       setAuthor(post.author);
       setTitle(post.title);
       setDescription(post.description);
@@ -64,12 +65,13 @@ const PostForm = ({ addPost, type, post, logged, className }) => {
       setPhoto(post.email);
       setId(post._id);
     }
-  }, []);
+  }, [post]);
 
   const handleSubmit = e => {
     e.preventDefault();
 
     if(type === 'edit') {
+      console.log('EDIT!');
       const post = {
         _id: id,
         author,
@@ -107,7 +109,7 @@ const PostForm = ({ addPost, type, post, logged, className }) => {
       {logged ? (
         <Paper elevation={3}>
           <Typography variant="h5" color="textSecondary" component="h2">
-            Add new post
+            { type === 'edit' ? 'Edit post' : 'Add new post' }
           </Typography>
           <form noValidate onSubmit={handleSubmit} autoComplete="off">
             <div className={classes.form}>
@@ -134,7 +136,7 @@ const PostForm = ({ addPost, type, post, logged, className }) => {
                 variant="contained"
                 to={`/`}
               >
-                Add post
+                { type === 'edit' ? 'Edit post' : 'Add post' }
               </Button>
             </div>
           </form>
@@ -153,7 +155,7 @@ PostForm.propTypes = {
   postId: PropTypes.node,
   logged: PropTypes.bool,
   className: PropTypes.string,
-  addPost: PropTypes.func,
+  editPost: PropTypes.func,
   classes: PropTypes.object,
 };
 
@@ -164,7 +166,7 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = (state, props) => ({
   logged: isLogged(state),
-  post: getById(state, props.match.params.id),
+  post: getById(state, props.id),
 });
 
 export const PostAdd = withStyles(styles)(Container);

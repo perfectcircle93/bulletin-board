@@ -7,7 +7,6 @@ router.get('/posts', async (req, res) => {
   try {
     const result = await Post
       .find({status: 'published'})
-      .select('author created title photo')
       .sort({created: -1});
     if(!result) res.status(404).json({ post: 'Not found' });
     else res.json(result);
@@ -41,7 +40,7 @@ router.post('/posts', async (req, res) => {
 
 router.put('/posts/:id', async (req, res) => {
   try {
-    const post = await Post.find({ _id: req.params.id });
+    const post = await Post.findOne({ _id: req.params.id });
     if(!post) res.status(404).json({ message: 'Not found '});
     else {
       for(const paramId in req.body) {

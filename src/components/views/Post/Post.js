@@ -48,7 +48,7 @@ const Component = ({
 }) => {
   const classes = useStyles();
 
-  return (
+  return (_id) ? (
     <Container>
       <Box px={3} mt={5}>
         <Card className={classes.root}>
@@ -104,7 +104,7 @@ const Component = ({
         </Card>
       </Box>
     </Container>
-  );
+  ) : null;
 };
 
 Component.propTypes = {
@@ -123,6 +123,7 @@ Component.propTypes = {
 
 const mapStateToProps = (state, props) => {
   const post = getById(state, props.match.params.id);
+
   return {
     ...post,
     logged: isLogged(state),
